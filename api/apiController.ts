@@ -16,16 +16,18 @@ app.use(bodyParser.json());
 
 
 app.get('/testnodeapi', (req, res) => {
-    connection.query('select * from testquerytable', function (error, result){
-        if (result){
-            // console.log(result)
-            res.send(result)
+    connection.query('select * from testquerytable', (error, result, field) =>{
+        if(error) throw error;
+        let message = "";
+        if(result === undefined || result.length === 0){
+            message = "Empty";
         }else{
-            // console.log(error)
-            res.send(error)
+            message = "Success";
         }
-    }); 
-})
+        return res.send({ error: false, data: result, message: message});
+    })
+}); 
+
 
 
 app.listen(PORT, ()=> console.log(`Serve is running at port ${PORT}`));
